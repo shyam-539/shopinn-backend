@@ -10,13 +10,13 @@ const PORT = process.env.PORT || 5000;
 app.use(express.json());
 app.use(cors());
 
-// Connect to MongoDB 
+// Connect to MongoDB
 mongoose
   .connect(process.env.MONGODB_URI)
   .then(() => console.log("✅ MongoDB Connected"))
   .catch((err) => {
     console.error("❌ MongoDB Connection Error:", err);
-    process.exit(1); // Stop the server if MongoDB fails to connect
+    process.exit(1);
   });
 
 // Routes
@@ -28,7 +28,7 @@ app.get("/", (req, res) => {
   res.send("🚀 E-commerce API is running...");
 });
 
-// Global Error Handling 
+// Global Error Handling
 process.on("uncaughtException", (err) => {
   console.error("❌ Uncaught Exception:", err);
 });

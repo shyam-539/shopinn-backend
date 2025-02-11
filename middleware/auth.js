@@ -2,6 +2,7 @@ const jwt = require("jsonwebtoken");
 
 const authenticateToken = (req, res, next) => {
   const token = req.header("Authorization")?.split(" ")[1];
+
   if (!token) return res.status(401).json({ error: "Access denied. No token provided." });
 
   try {
@@ -9,13 +10,8 @@ const authenticateToken = (req, res, next) => {
     req.user = decoded; // { userId, role }
     next();
   } catch (err) {
-    res.status(400).json({ error: "Invalid token" });
+    res.status(403).json({ error: "Invalid token" });
   }
 };
 
-const isAdmin = (req, res, next) => {
-  if (req.user.role !== "admin") return res.status(403).json({ error: "Access denied. Admins only." });
-  next();
-};
-
-module.exports = { authenticateToken, isAdmin };
+module.exports = authenticateToken;
