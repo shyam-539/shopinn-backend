@@ -10,11 +10,14 @@ const PORT = process.env.PORT || 5000;
 app.use(express.json());
 app.use(cors());
 
-// Connect to MongoDB
+// Connect to MongoDB 
 mongoose
-  .connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+  .connect(process.env.MONGODB_URI)
   .then(() => console.log("✅ MongoDB Connected"))
-  .catch((err) => console.error("❌ MongoDB Connection Error:", err));
+  .catch((err) => {
+    console.error("❌ MongoDB Connection Error:", err);
+    process.exit(1); // Stop the server if MongoDB fails to connect
+  });
 
 // Routes
 app.use("/api/auth", require("./routes/auth"));
@@ -23,6 +26,15 @@ app.use("/api/products", require("./routes/product"));
 // Default Route
 app.get("/", (req, res) => {
   res.send("🚀 E-commerce API is running...");
+});
+
+// Global Error Handling 
+process.on("uncaughtException", (err) => {
+  console.error("❌ Uncaught Exception:", err);
+});
+
+process.on("unhandledRejection", (err) => {
+  console.error("❌ Unhandled Promise Rejection:", err);
 });
 
 // Start Server
